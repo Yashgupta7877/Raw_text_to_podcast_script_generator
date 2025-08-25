@@ -1,0 +1,176 @@
+<!--&lt;!&ndash; templates/index.html &ndash;&gt;-->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>AI News to Podcast Script Generator</title>-->
+<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
+<!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">-->
+<!--    &lt;!&ndash; This line is the connection to your CSS file &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <header>-->
+<!--            <div class="header-content">-->
+<!--                <h1>🎙️ AI News Podcast Generator</h1>-->
+<!--                <p class="subtitle">Transform breaking AI headlines into a ready-to-record podcast script with a single click.</p>-->
+<!--            </div>-->
+<!--        </header>-->
+
+<!--        &lt;!&ndash; Flash Messages &ndash;&gt;-->
+<!--        {% with messages = get_flashed_messages(with_categories=true) %}-->
+<!--            {% if messages %}-->
+<!--                <div class="flash-messages">-->
+<!--                {% for category, message in messages %}-->
+<!--                    <div class="flash {{ category }}">{{ message }}</div>-->
+<!--                {% endfor %}-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--        {% endwith %}-->
+
+<!--        <div class="action-box">-->
+<!--            <form id="generate-form" action="/generate-script" method="post">-->
+<!--                <button type="submit" class="generate-btn">-->
+<!--                    <span class="btn-text">Generate Podcast Script</span>-->
+<!--                    <span class="spinner"></span>-->
+<!--                </button>-->
+<!--            </form>-->
+<!--        </div>-->
+
+<!--        {% if script %}-->
+<!--        <div class="results-grid">-->
+<!--            &lt;!&ndash; Generated Script Section &ndash;&gt;-->
+<!--            <div class="card script-card">-->
+<!--                <div class="card-header">-->
+<!--                    <h2>Generated Podcast Script</h2>-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <pre class="script-content">{{ script }}</pre>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Original Articles Section &ndash;&gt;-->
+<!--            <div class="card articles-card">-->
+<!--                <div class="card-header">-->
+<!--                    <h2>Source Articles</h2>-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <div class="articles-list">-->
+<!--                        {% for article in articles %}-->
+<!--                            <div class="article">-->
+<!--                                <h3>{{ article.title }}</h3>-->
+<!--                                <p>{{ article.description }}</p>-->
+<!--                                <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">Read Full Article &rarr;</a>-->
+<!--                            </div>-->
+<!--                        {% endfor %}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {% endif %}-->
+<!--    </div>-->
+
+<!--    <footer>-->
+<!--        <p>Built with Flask & Gemini</p>-->
+<!--    </footer>-->
+
+<!--    <script>-->
+<!--        // Adds a loading state to the button on form submission-->
+<!--        document.getElementById('generate-form').addEventListener('submit', function() {-->
+<!--            const button = this.querySelector('.generate-btn');-->
+<!--            button.classList.add('loading');-->
+<!--            button.disabled = true;-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Podcast Script Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- This line is the connection to your CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🎙️ Text to Podcast Script Generator</h1>
+                <p class="subtitle">Paste any text, article, or transcript below and instantly convert it into a ready-to-record podcast script.</p>
+            </div>
+        </header>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="generator-box">
+            <form id="generate-form" action="/" method="post">
+                <label for="raw-text" class="form-label">Paste your raw text below</label>
+                <textarea id="raw-text" name="raw_text" rows="12" class="text-input" placeholder="Paste your article, transcript, or any text here...">{{ raw_text or '' }}</textarea>
+                <button type="submit" class="generate-btn">
+                    <span class="btn-text">Generate Podcast Script</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        {% if script %}
+        <div class="results-grid">
+            <!-- Generated Script Section -->
+            <div class="card script-card">
+                <div class="card-header">
+                    <h2>Generated Podcast Script</h2>
+                </div>
+                <div class="card-body">
+                    <pre class="script-content">{{ script }}</pre>
+                </div>
+            </div>
+
+            <!-- Original Text Section -->
+            <div class="card articles-card">
+                <div class="card-header">
+                    <h2>Your Original Text</h2>
+                </div>
+                <div class="card-body">
+                     <pre class="script-content original-text">{{ raw_text }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>Built with Flask & Gemini</p>
+    </footer>
+
+    <script>
+        // Adds a loading state to the button on form submission
+        document.getElementById('generate-form').addEventListener('submit', function() {
+            const button = this.querySelector('.generate-btn');
+            // Only show loader if textarea is not empty
+            const textArea = document.getElementById('raw-text');
+            if (textArea.value.trim() !== '') {
+                button.classList.add('loading');
+                button.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
